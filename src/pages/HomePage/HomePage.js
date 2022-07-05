@@ -20,8 +20,12 @@ export default function HomePage() {
           `${BASE_URL_API}?skip=${(page - 1) * 18}&limit=18`
         );
         if (response.ok && !cancel) {
-          const recipes = await response.json();
-          setRecipes(Array.isArray(recipes) ? recipes : [recipes]);
+          const newRecipes = await response.json();
+          setRecipes((x) =>
+            Array.isArray(newRecipes)
+              ? [...x, ...newRecipes]
+              : [...x, newRecipes]
+          );
         }
       } catch (e) {
         console.log('ERREUR');
@@ -33,7 +37,7 @@ export default function HomePage() {
     }
     fetchRecipes();
     return () => (cancel = true);
-  }, []);
+  }, [BASE_URL_API, page]);
 
   function handleInput(e) {
     const filter = e.target.value;
