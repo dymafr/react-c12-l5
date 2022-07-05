@@ -8,6 +8,7 @@ export default function HomePage() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [page, setPage] = useState(1);
   const BASE_URL_API = useContext(ApiContext);
 
   useEffect(() => {
@@ -15,7 +16,9 @@ export default function HomePage() {
     async function fetchRecipes() {
       try {
         setIsLoading(true);
-        const response = await fetch(BASE_URL_API);
+        const response = await fetch(
+          `${BASE_URL_API}?skip=${(page - 1) * 18}&limit=18`
+        );
         if (response.ok && !cancel) {
           const recipes = await response.json();
           setRecipes(Array.isArray(recipes) ? recipes : [recipes]);
@@ -75,6 +78,11 @@ export default function HomePage() {
               ))}
           </div>
         )}
+        <div className="d-flex flex-row justify-content-center align-items-center p-20">
+          <button onClick={() => setPage(page + 1)} className="btn btn-primary">
+            Charger plus de recettes
+          </button>
+        </div>
       </div>
     </div>
   );
